@@ -2,6 +2,7 @@ package myVoca;
 
 public class VocaBean {
 	private String id;
+	private String pw;
 	private String word;
 	private String desc;
 	private String folder;
@@ -14,6 +15,14 @@ public class VocaBean {
 	
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getPw() {
+		return pw;
+	}
+	
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 	
 	// Get, Set word

@@ -1,9 +1,9 @@
 package myVoca;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -50,7 +50,7 @@ public class Main extends MFrame {
 	
 	Integer pl1 = 60, pl2 = 60, pl3 = 60;
 	
-	public Main() {
+	public Main(String idt) {
 		super(1024, 680);
 		setTitle("기억노트");
 		Container c = getContentPane();
@@ -71,7 +71,7 @@ public class Main extends MFrame {
 		img = new ImageIcon(newImg);
 		profile = new JLabel(img);
 		profile.setSize(100, 100);
-		id = new JLabel("MyID");
+		id = new JLabel(idt);
 		id.setFont(new Font("나눔스퀘어 Bold", 0, 18));
 		header.setBackground(Color.WHITE);
 		header.add(searchLbl, BorderLayout.WEST);
@@ -120,7 +120,7 @@ public class Main extends MFrame {
 		panel3.setLayout(null);
 		panel3.setVisible(false);
 		
-		// 패널 1
+		// 하위 메뉴
 		JButton folderBtn = new JButton("폴더 관리");
 		folderBtn.setBackground(Color.WHITE);
 		folderBtn.setBounds(0, 0, 118, 60);
@@ -164,6 +164,12 @@ public class Main extends MFrame {
 		setMdfBtn.setBounds(0, 61, 118, 60);
 		setMdfBtn.setFont(new Font("나눔스퀘어 ExtraBold", 0, 14));
 		panel3.add(setMdfBtn);
+		
+		// 메인패널 구현
+		mainPanel = new JPanel(new BorderLayout());
+		
+		// 메인 패널 부분 : 사이드 메뉴 누르면 전환될 패널들 초기화
+		ModifyFolder mdf = new ModifyFolder(idt);
 		
 		// 하위 메뉴 구현
 		myvocaBtn.addMouseListener(new MouseAdapter() {
@@ -232,7 +238,7 @@ public class Main extends MFrame {
 				tm3 = new Timer(20, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(pl3 > 125) {
+						if(pl3 > 200) {
 							tm3.stop();
 						}
 						else {
@@ -252,27 +258,23 @@ public class Main extends MFrame {
 		});
 		// 하위메뉴 구현 끝
 		
-		// 메인 패널부분
-		mainPanel = new JPanel(new BorderLayout());
+		modifyBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				panel2.setVisible(false);
+				panel3.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(mdf);
+				revalidate();
+				repaint();
+			}
+		});
 		
 		c.add(header, BorderLayout.NORTH);
 		c.add(leftside, BorderLayout.WEST);
-		c.add(mainPanel, BorderLayout.CENTER);
+		c.add(mainPanel);
 		this.validate();
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					new Main();
-				}
-				catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }
 
