@@ -7,12 +7,12 @@ import java.util.Vector;
 
 import javax.swing.*;
 
-
-public class login extends JFrame implements ActionListener{
+public class login extends JFrame implements ActionListener {
 
 	JPanel head, body;
 	JLabel title, sbtitle, idl, pwl, notlg;
-	JTextField idt, pwt;
+	JTextField idt;
+	JPasswordField pwt;
 	JButton login, join, find;
 	String id, pw;
 	Vector<VocaBean> vlist;
@@ -22,10 +22,10 @@ public class login extends JFrame implements ActionListener{
 		setSize(1024, 680);
 		setTitle("기억노트");
 		Container c = getContentPane();
-		mgr = new DBMgr();
-		vlist = new Vector<VocaBean>();
 		c.setLayout(null);
 		c.setBackground(Color.white);
+		mgr = new DBMgr();
+		vlist = new Vector<VocaBean>();
 		
 		head = new JPanel();
 		head.setSize(1024, 250);
@@ -56,25 +56,29 @@ public class login extends JFrame implements ActionListener{
 		pwl = new JLabel("PW");
 		pwl.setFont(new Font("나눔스퀘어 Bold", 5, 25));
 		pwl.setBounds(290, 140, 50, 50);
-		pwt = new JTextField();
+		pwt = new JPasswordField("");
 		pwt.setBounds(350, 150, 300, 30);
+
 		
 		login = new JButton("로그인");
 		login.setFont(new Font("나눔스퀘어 Bold", 5, 20));
 		login.setBounds(660, 100, 100, 80);
 		login.setBackground(Color.black);
 		login.setForeground(Color.white);
+		login.setBorderPainted(false);
 		login.addActionListener(this);
 		
 		join = new JButton("회원가입");
 		join.setFont(new Font("나눔스퀘어 Bold", 5, 12));
 		join.setBounds(350, 190, 80, 30);
 		join.setBackground(Color.white);
+		join.setBorderPainted(false);
 		
 		find = new JButton("아이디/비밀번호 찾기");
 		find.setFont(new Font("나눔스퀘어 Bold", 5, 12));
 		find.setBounds(610, 190, 150, 30);
 		find.setBackground(Color.WHITE);
+		find.setBorderPainted(false);
 		
 		notlg = new JLabel("");
 		notlg.setFont(new Font("나눔스퀘어 Bold", 0, 14));
@@ -114,7 +118,8 @@ public class login extends JFrame implements ActionListener{
 				if(id.equals(idt.getText()) && pw.equals(pwt.getText())) {
 					dispose();
 					new Main(idt.getText());
-				} else {
+				}
+				else {
 					notlg.setText("아이디와 비밀번호를 확인하세요.");
 				}
 			}
@@ -125,3 +130,5 @@ public class login extends JFrame implements ActionListener{
 		new login();
 	}
 }
+
+

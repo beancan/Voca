@@ -22,42 +22,31 @@ import javax.swing.Timer;
 public class Main extends MFrame {
 	
 	// 주요 패널
-	JPanel header;
-	JPanel leftside;
-	JPanel mainPanel;
+	JPanel headPanel, leftPanel, mainPanel;
 	
 	// 사이드 바
 	Timer tm1, tm2, tm3;
-	JButton myvocaBtn;
-	JButton quizBtn;
-	JButton bookmarkBtn;
-	JButton friendsBtn;
-	JButton settingsBtn;
+	JButton myvocaBtn, quizBtn, bookmarkBtn, friendsBtn, settingsBtn;
 	
 	// 사이드바 하위 메뉴
-	JPanel panel = new JPanel();
-	JPanel panel2 = new JPanel();
-	JPanel panel3 = new JPanel();
+	JPanel panel, panel2, panel3;
 	
 	// 헤더
 	JButton searchBtn;
 	ImageIcon img;
-	JLabel profile;
-	JLabel id;
-	JLabel searchLbl;
-	JLabel empty1;
+	JLabel profile, id, searchLbl, empty1;
 	JTextField search;
 	
 	Integer pl1 = 60, pl2 = 60, pl3 = 60;
 	
 	public Main(String idt) {
-		super(1024, 680);
+		super(1024, 680, new Color(255, 255, 255), true);
 		setTitle("기억노트");
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
 		
 		// header 부분
-		header = new JPanel();
+		headPanel = new JPanel();
 		searchLbl = new JLabel("검색");
 		searchLbl.setFont(new Font("나눔스퀘어 Bold", 0, 15));
 		search = new JTextField(50);
@@ -73,16 +62,16 @@ public class Main extends MFrame {
 		profile.setSize(100, 100);
 		id = new JLabel(idt);
 		id.setFont(new Font("나눔스퀘어 Bold", 0, 18));
-		header.setBackground(Color.WHITE);
-		header.add(searchLbl, BorderLayout.WEST);
-		header.add(search, BorderLayout.WEST);
-		header.add(searchBtn, BorderLayout.WEST);
-		header.add(empty1, BorderLayout.CENTER);
-		header.add(profile, BorderLayout.EAST);
-		header.add(id, BorderLayout.EAST);
+		headPanel.setBackground(Color.WHITE);
+		headPanel.add(searchLbl, BorderLayout.WEST);
+		headPanel.add(search, BorderLayout.WEST);
+		headPanel.add(searchBtn, BorderLayout.WEST);
+		headPanel.add(empty1, BorderLayout.CENTER);
+		headPanel.add(profile, BorderLayout.EAST);
+		headPanel.add(id, BorderLayout.EAST);
 		
 		// 왼쪽 사이드 메뉴 
-		leftside = new JPanel(new GridLayout(5, 1));		
+		leftPanel = new JPanel(new GridLayout(5, 1));		
 		myvocaBtn = new JButton("내 단어장");
 		quizBtn = new JButton("퀴즈");
 		bookmarkBtn = new JButton("즐겨찾기");
@@ -98,13 +87,17 @@ public class Main extends MFrame {
 		bookmarkBtn.setFont(new Font("나눔스퀘어 ExtraBold", 0, 18));
 		friendsBtn.setFont(new Font("나눔스퀘어 ExtraBold", 0, 18));
 		settingsBtn.setFont(new Font("나눔스퀘어 ExtraBold", 0, 18));
-		leftside.add(myvocaBtn);
-		leftside.add(quizBtn);
-		leftside.add(bookmarkBtn);
-		leftside.add(friendsBtn);
-		leftside.add(settingsBtn);
+		leftPanel.add(myvocaBtn);
+		leftPanel.add(quizBtn);
+		leftPanel.add(bookmarkBtn);
+		leftPanel.add(friendsBtn);
+		leftPanel.add(settingsBtn);
 		
 		// 사이드바 하위 메뉴 구현
+		panel = new JPanel();
+		panel2 = new JPanel();
+		panel3 = new JPanel();
+		
 		panel.setBounds(106, 110, 118, 60);
 		c.add(panel);
 		panel.setLayout(null);
@@ -169,7 +162,9 @@ public class Main extends MFrame {
 		mainPanel = new JPanel(new BorderLayout());
 		
 		// 메인 패널 부분 : 사이드 메뉴 누르면 전환될 패널들 초기화
-		ModifyFolder mdf = new ModifyFolder(idt);
+		ModFolder mdf = new ModFolder(idt);
+		DeleteFolder df = new DeleteFolder(idt);
+		CreateSet cs = new CreateSet(idt);
 		
 		// 하위 메뉴 구현
 		myvocaBtn.addMouseListener(new MouseAdapter() {
@@ -258,6 +253,7 @@ public class Main extends MFrame {
 		});
 		// 하위메뉴 구현 끝
 		
+		// 하위메뉴 버튼 이벤트 구현
 		modifyBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -271,8 +267,35 @@ public class Main extends MFrame {
 			}
 		});
 		
-		c.add(header, BorderLayout.NORTH);
-		c.add(leftside, BorderLayout.WEST);
+		deleteBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				panel2.setVisible(false);
+				panel3.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(df);
+				revalidate();
+				repaint();
+			}
+		});
+		
+		setCrtBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				panel2.setVisible(false);
+				panel3.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(cs);
+				revalidate();
+				repaint();
+			}
+		});
+		// 하위메뉴 버튼 이벤트 끝
+		
+		c.add(headPanel, BorderLayout.NORTH);
+		c.add(leftPanel, BorderLayout.WEST);
 		c.add(mainPanel);
 		this.validate();
 	}
