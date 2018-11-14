@@ -12,16 +12,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class Layout extends JFrame implements ActionListener {
+public class SignIn extends JFrame implements ActionListener {
 
 	JTextField txt_id, txt_Name, txt_email, txt_birth;
 	JPasswordField pwTf, pwTf2;
 	JLabel logo, id, pw, pw2, name, email, birth;
 	JButton b_overlap, b_acc, b_cancle;
 	
-	public Layout() {// 메인 레이아웃
+	public SignIn() { // 회원가입 레이아웃
 
-		super("레이아웃");
+		super("회원가입");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setResizable(false);
@@ -73,12 +73,12 @@ public class Layout extends JFrame implements ActionListener {
 		add(email); add(txt_email); add(birth); add(txt_birth);
 		add(b_acc); add(b_cancle);
 		
-		setBounds(100, 50, 1024, 680);
-		setVisible(true);
-		
 		b_overlap.addActionListener(this);
 		b_acc.addActionListener(this);
 		b_cancle.addActionListener(this);
+		
+		setBounds(100, 50, 1024, 680);
+		setVisible(true);
 	}
 	
 	@Override
@@ -133,9 +133,4 @@ public class Layout extends JFrame implements ActionListener {
 		
 		return dbt;
 	}
-	
-	public static void main(String[] args) {
-		new Layout();
-	}
-
 }

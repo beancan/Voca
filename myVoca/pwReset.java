@@ -50,6 +50,10 @@ class CheckPop extends JFrame implements ActionListener{
 		//exitBtn.setForeground(Color.white);
 		exitBtn.addActionListener(this);
 		
+		Dimension frameSize = this.getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((screenSize.width-frameSize.width)/2, (screenSize.height - frameSize.height)/2);
+		
 		c.add(noticeL);
 		c.add(exitBtn);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

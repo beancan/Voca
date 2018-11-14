@@ -35,6 +35,10 @@ public class NewFolder extends JFrame{
 		create.setBounds(400, 150, 80, 30);
 		create.setBackground(Color.white);
 		
+		Dimension frameSize = this.getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((screenSize.width-frameSize.width)/2, (screenSize.height - frameSize.height)/2);
+		
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

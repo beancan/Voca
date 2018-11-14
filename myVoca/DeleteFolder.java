@@ -41,7 +41,7 @@ public class DeleteFolder extends JPanel implements ActionListener {
 	public DeleteFolder(String myId) {
 		mgr = new DBMgr();
 		folders = new Vector<VocaBean>();
-		folders = mgr.getfolders();
+		folders = mgr.getfolders(myId);
 		tb = new TitledBorder(new LineBorder(Color.BLACK));
 		mainPanel = new JPanel(new BorderLayout());
 		contentPanel = new JPanel(new GridLayout(folders.size(), 1));

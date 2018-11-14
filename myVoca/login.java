@@ -73,6 +73,7 @@ public class login extends JFrame implements ActionListener {
 		join.setBounds(350, 190, 80, 30);
 		join.setBackground(Color.white);
 		join.setBorderPainted(false);
+		join.addActionListener(this);
 		
 		find = new JButton("아이디/비밀번호 찾기");
 		find.setFont(new Font("나눔스퀘어 Bold", 5, 12));
@@ -96,6 +97,10 @@ public class login extends JFrame implements ActionListener {
 		body.add(find);
 		body.add(notlg);
 		
+		Dimension frameSize = this.getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((screenSize.width-frameSize.width)/2, (screenSize.height - frameSize.height)/2);
+		
 		setVisible(true);
 		//setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,7 +111,7 @@ public class login extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj==login) {
+		if(obj == login) {
 			
 			vlist = mgr.getLogin();
 			
@@ -123,6 +128,9 @@ public class login extends JFrame implements ActionListener {
 					notlg.setText("아이디와 비밀번호를 확인하세요.");
 				}
 			}
+		}
+		else if(obj == join) {
+			new SignIn();
 		}
 	}
 	

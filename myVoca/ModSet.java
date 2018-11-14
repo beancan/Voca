@@ -1,12 +1,20 @@
 package myVoca;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class CreateSet extends JPanel {
+public class ModSet extends JPanel {
 	
 	Vector<VocaBean> sets;
 	DBMgr mgr;
@@ -14,7 +22,7 @@ public class CreateSet extends JPanel {
 	DefaultTableModel model;
 	
 	JPanel leftPanel, rightPanel, btnPanel, tf1Panel, tf2Panel, tf3Panel, mainPanel;
-	JButton plusBtn, minusBtn, cancelBtn, createBtn;
+	JButton plusBtn, minusBtn, cancelBtn, modBtn;
 	JTextField wordTf, descTf;
 	JScrollPane sc;
 	JLabel title;
@@ -25,7 +33,7 @@ public class CreateSet extends JPanel {
 	String word = "";
 	String desc = "";
 	
-	public CreateSet(String myId) {
+	public ModSet(String myId) {
 		
 		mgr = new DBMgr();
 		model = new DefaultTableModel(value, attr);
@@ -45,8 +53,8 @@ public class CreateSet extends JPanel {
 		plusBtn = new JButton("+");
 		minusBtn = new JButton("-");
 		cancelBtn = new JButton("취소");
-		createBtn = new JButton("단어세트 생성");
-		title = new JLabel("단어세트 생성");
+		modBtn = new JButton("변경사항 적용");
+		title = new JLabel("단어세트 수정");
 		
 		value = new String[sets.size()][2];
 		
@@ -68,7 +76,7 @@ public class CreateSet extends JPanel {
 		tf1Panel.add(minusBtn);
 		tf2Panel.add(descTf);
 		tf2Panel.add(cancelBtn);
-		tf2Panel.add(createBtn);		
+		tf2Panel.add(modBtn);		
 		
 		leftPanel.add(sc, BorderLayout.CENTER);
 		tf3Panel.add(tf1Panel);

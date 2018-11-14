@@ -1,5 +1,7 @@
 package myVoca;
 
+import java.sql.Date;
+
 public class VocaBean {
 	private String id;
 	private String pw;

@@ -15,6 +15,38 @@ public class DBMgr {
 		pool = DBConnectionMgr.getInstance();
 	}
 	
+	public boolean getWordFlag(String myId) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; // select의 결과물은 반드시 rs로 받는다.
+		String sql = null;
+		boolean flag = false;
+		
+		try {
+			con = pool.getConnection();
+			sql = "select count(name) from sets where id=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, myId);
+			rs = pstmt.executeQuery(); // select - executeQuery
+			while(rs.next()) {
+				if(rs.getInt(1) == 0) {
+					flag = false;
+				}
+				else {
+					flag = true;
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		
+		return flag;
+	}
+	
 	// 해당 아이디의 단어와 단어 설명을 가져옴
 	public Vector<VocaBean> getwords(String myId) {
 		Connection con = null;
@@ -48,7 +80,7 @@ public class DBMgr {
 	}
 	
 	// 폴더명을 가져옴
-	public Vector<VocaBean> getfolders() {
+	public Vector<VocaBean> getfolders(String myId) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null; // select의 결과물은 반드시 rs로 받는다.
@@ -57,8 +89,9 @@ public class DBMgr {
 
 		try {
 			con = pool.getConnection();
-			sql = "select distinct folder from words";
+			sql = "select distinct name from folders where id=?";
 			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, myId);
 			rs = pstmt.executeQuery(); // select - executeQuery
 
 			while(rs.next()) {
@@ -86,7 +119,7 @@ public class DBMgr {
 
 		try { // 예외가 일어날 가능성이 있는 코드 영역
 			con = pool.getConnection(); // pool에서 Connection 객체를 빌려온다.
-			sql = "update words set folder=? " + "where id=?"; // Query문(실행하기 전까진 오류를 알 수 없다)
+			sql = "update words set foldername=? " + "where id=?"; // Query문(실행하기 전까진 오류를 알 수 없다)
 			pstmt = con.prepareStatement(sql); // 쿼리문을 DB로 보내기 위해서 만들어야 하는 객체
 			pstmt.setString(1, bean.getFolder());
 			pstmt.setString(2, bean.getId());
@@ -116,7 +149,7 @@ public class DBMgr {
 
 		try {
 			con = pool.getConnection();
-			sql = "select count(setname) from words where folder=?";
+			sql = "select count(setname) from words where foldername=?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, folder);
 			rs = pstmt.executeQuery(); // select - executeQuery
@@ -132,6 +165,66 @@ public class DBMgr {
 		}
 
 		return count;
+	}
+	
+	// 폴더가 없는 단어의 갯수 카운트
+	public int getWordsCount(String myId) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; // select의 결과물은 반드시 rs로 받는다.
+		String sql = null;
+		int count = 0;
+
+		try {
+			con = pool.getConnection();
+			sql = "select count(word) from words where foldername is null and id=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, myId);
+
+			rs = pstmt.executeQuery(); // select - executeQuery
+			while(rs.next()) {
+				count = rs.getInt(1);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+
+		return count;
+	}
+	
+	// 폴더가 없는 단어세트 이름을 가져옴
+	public Vector<VocaBean> getNoFolderSets(String myId) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; // select의 결과물은 반드시 rs로 받는다.
+		String sql = null;
+		Vector<VocaBean> vlist = new Vector<VocaBean>();
+
+		try {
+			con = pool.getConnection();
+			sql = "select distinct setname from words where foldername is null and id=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, myId);
+			rs = pstmt.executeQuery(); // select - executeQuery
+
+			while(rs.next()) {
+				VocaBean bean = new VocaBean();
+				bean.setSetname(rs.getString(1));
+				vlist.addElement(bean);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+
+		return vlist;
 	}
 	
 	// 로그인을 위해 ID와 PW 받아옴
@@ -269,8 +362,8 @@ public class DBMgr {
 		
 		try {
 			con = pool.getConnection();
-			String sql = "insert into accountlist(" +
-							"id, pw, name, email, birth)" +
+			String sql = "insert into user(" +
+							"id, pw, birthday, name, email)" +
 							"values(?, ?, ?, ? ,?)";
 			
 			ps = con.prepareStatement(sql);
@@ -290,8 +383,7 @@ public class DBMgr {
 			}
 		}
 		catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "아이디가 중복입니다. 다른 아이디를 입력하세요.", "ERROR",
-															JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "아이디가 중복입니다. 다른 아이디를 입력하세요.", "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -309,7 +401,7 @@ public class DBMgr {
 
 		try {
 			con = pool.getConnection();
-			String sql = "select id from accountlist where id = ?;";
+			String sql = "select id from user where id=?";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, id);
 			ResultSet rs = ps.executeQuery();

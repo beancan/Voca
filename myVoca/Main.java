@@ -4,13 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,6 +40,9 @@ public class Main extends MFrame {
 	JLabel profile, id, searchLbl, empty1;
 	JTextField search;
 	
+	DBMgr mgr;
+	boolean startflag;
+	
 	Integer pl1 = 60, pl2 = 60, pl3 = 60;
 	
 	public Main(String idt) {
@@ -51,8 +57,8 @@ public class Main extends MFrame {
 		searchLbl.setFont(new Font("나눔스퀘어 Bold", 0, 15));
 		search = new JTextField(50);
 		searchBtn = new JButton("검색");
+		searchBtn.setBackground(Color.BLACK);
 		searchBtn.setFont(new Font("나눔스퀘어 Bold", 0 , 15));
-		searchBtn.setBackground(Color.white);
 		empty1 = new JLabel("                         ");
 		img = new ImageIcon("C:/java/eclipse-workspace/myjava/src/p/user.png");
 		Image newImg = img.getImage();
@@ -160,11 +166,17 @@ public class Main extends MFrame {
 		
 		// 메인패널 구현
 		mainPanel = new JPanel(new BorderLayout());
+		mgr = new DBMgr();
+		startflag = mgr.getWordFlag(idt);
 		
 		// 메인 패널 부분 : 사이드 메뉴 누르면 전환될 패널들 초기화
+		Home home = new Home(idt);
+		noFolder nf = new noFolder();
 		ModFolder mdf = new ModFolder(idt);
 		DeleteFolder df = new DeleteFolder(idt);
 		CreateSet cs = new CreateSet(idt);
+		ModSet ms = new ModSet(idt);
+		Setting st = new Setting(idt);
 		
 		// 하위 메뉴 구현
 		myvocaBtn.addMouseListener(new MouseAdapter() {
@@ -292,7 +304,47 @@ public class Main extends MFrame {
 				repaint();
 			}
 		});
+		
+		setMdfBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				panel2.setVisible(false);
+				panel3.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(ms);
+				revalidate();
+				repaint();
+			}
+		});
+		
+		settingsBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainPanel.removeAll();
+				mainPanel.add(st);
+				revalidate();
+				repaint();
+			}
+		});
 		// 하위메뉴 버튼 이벤트 끝
+		
+		if(startflag == true) {
+			mainPanel.removeAll();
+			mainPanel.add(home);
+			revalidate();
+			repaint();
+		}
+		else if(startflag == false) {
+			mainPanel.removeAll();
+			mainPanel.add(nf);
+			revalidate();
+			repaint();
+		}
+		
+		Dimension frameSize = this.getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((screenSize.width-frameSize.width)/2, (screenSize.height - frameSize.height)/2);
 		
 		c.add(headPanel, BorderLayout.NORTH);
 		c.add(leftPanel, BorderLayout.WEST);
