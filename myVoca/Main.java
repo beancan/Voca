@@ -171,7 +171,7 @@ public class Main extends MFrame {
 		
 		// 메인 패널 부분 : 사이드 메뉴 누르면 전환될 패널들 초기화
 		Home home = new Home(idt);
-		noFolder nf = new noFolder();
+		NoFolder nf = new NoFolder();
 		ModFolder mdf = new ModFolder(idt);
 		DeleteFolder df = new DeleteFolder(idt);
 		CreateSet cs = new CreateSet(idt);

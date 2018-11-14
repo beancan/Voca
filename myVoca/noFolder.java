@@ -6,14 +6,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class noFolder extends JPanel implements ActionListener {
+public class NoFolder extends JPanel implements ActionListener {
 	ImageIcon icon;
 	Image img;
 	JLabel imgL, lb1, lb2;
 	JButton createBtn;
 	Line newLine = new Line();
 	
-	public noFolder() {
+	public NoFolder() {
 		setSize(900, 550);
 		setBackground(Color.white);
 		setLayout(null);
@@ -70,6 +70,6 @@ public class noFolder extends JPanel implements ActionListener {
 	}
 	
 	public static void main(String[] args) {
-		new noFolder();
+		new NoFolder();
 	}
 }
