@@ -38,6 +38,10 @@ class CheckPop extends JFrame implements ActionListener{
 			noticeL = new JLabel("비밀번호 변경에 실패하였습니다.");
 			noticeL.setFont(new Font("나눔스퀘어 Bold", 0, 16));
 			noticeL.setBounds(80, 50, 250, 30);
+		} else if (a==6) {
+			noticeL = new JLabel("입력하지 않은 항목이 있습니다.");
+			noticeL.setFont(new Font("나눔스퀘어 Bold", 0, 16));
+			noticeL.setBounds(85, 50, 300, 30);
 		}
 		/*noticeL = new JLabel();
 		noticeL.setFont(new Font("나눔스퀘어 Bold", 0, 16));
@@ -151,18 +155,23 @@ public class pwReset extends JPanel implements ActionListener{
 			String setpw2 = resetPw2.getText();	// 변경할 비밀번호 재입력
 			
 			if(nowPw.getText().equals(pw)){	//	현재 비밀번호 일치
-				if(setpw.equals(setpw2)) {	// 변경할 pw와 재입력 pw가 일치할 때
-					boolean flag = mgr.updatePw(id, setpw);
-					if(flag==true) 
-						new CheckPop(3).setVisible(true);
-					else
-						new CheckPop(4).setVisible(true);
-					removeAll();
-					add(new Setting(id));
-					revalidate();
-					repaint();
-				}else {		// 불일치할 때
-					new CheckPop(2).setVisible(true);
+				if(setpw.equals("") || setpw2.equals("")) {
+					new CheckPop(6).setVisible(true);
+				} else {
+					if(setpw.equals(setpw2)) {	// 변경할 pw와 재입력 pw가 일치할 때
+						boolean flag = mgr.updatePw(id, setpw);
+						if(flag==true) 
+							new CheckPop(3).setVisible(true);
+						else
+							new CheckPop(4).setVisible(true);
+						removeAll();
+						add(new Setting(id));
+						revalidate();
+						repaint();
+					}else {		// 불일치할 때
+						new CheckPop(2).setVisible(true);
+					}
+					
 				}
 			} else {	// 현재 비밀번호 불일치
 				new CheckPop(1).setVisible(true);

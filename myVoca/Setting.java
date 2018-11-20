@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class Setting extends JPanel implements ActionListener{
+public class Setting extends JPanel implements ActionListener {
 
 	JPanel body;
 	JButton pwBtn, themeBtn, wdExBtn, logoutBtn, whiteBtn, blackBtn;
@@ -25,6 +25,7 @@ public class Setting extends JPanel implements ActionListener{
 		pwBtn.setBackground(Color.white);
 		pwBtn.setBounds(150, 115, 210, 45);
 		pwBtn.setBorderPainted(false);
+		pwBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		themeBtn = new JButton("Å×¸¶ ¼³Á¤");
 		themeBtn.setFont(new Font("³ª´®½ºÄù¾î Bold", 0, 24));
@@ -43,6 +44,7 @@ public class Setting extends JPanel implements ActionListener{
 		logoutBtn.setBackground(Color.white);
 		logoutBtn.setBounds(150, 325, 210, 45);
 		logoutBtn.setBorderPainted(false);
+		logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		// color themeBtn
 		whiteBtn = new JButton("White");

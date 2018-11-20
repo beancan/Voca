@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -33,15 +34,19 @@ public class ModFolder extends JPanel implements ActionListener {
 	JLabel[] idLabels;
 	JLabel[] setLabels;
 	JTextField[] tfs;
-	JLabel title;
+	JLabel title, empty1, empty2;
 	
-	String fname;
+	String fname[];
+	String myId;
 	int setcount[];
+	int i;
 	
 	public ModFolder(String myId) {	
+		setBackground(Color.WHITE);
 		mgr = new DBMgr();
 		folders = new Vector<VocaBean>();
-		folders = mgr.getfolders(myId);
+		folders = mgr.getFolders(myId);
+		this.myId = myId;
 		tb = new TitledBorder(new LineBorder(Color.BLACK));
 		mainPanel = new JPanel(new BorderLayout());
 		contentPanel = new JPanel(new GridLayout(folders.size(), 1));
@@ -55,22 +60,25 @@ public class ModFolder extends JPanel implements ActionListener {
 		
 		title = new JLabel("내 폴더 수정");
 		title.setFont(new Font("나눔스퀘어 Bold", 0, 28));
+		empty1 = new JLabel("             ");
+		empty2 = new JLabel("             ");
 		
 		this.setLayout(new BorderLayout(20, 20));
 		
-		for (int i = 0; i < folders.size(); i++) {
+		for (i = 0; i < folders.size(); i++) {
 			VocaBean bean = folders.get(i);
-			fname = bean.getFolder().trim();
+			fname = new String[folders.size()];
+			fname[i] = bean.getFolder().trim();
 			
-			setcount[i] = mgr.getSetCount(fname);
+			setcount[i] = mgr.getSetCount(fname[i]);
 			panels[i] = new JPanel(new BorderLayout());
 			panels[i].setBorder(new EtchedBorder());
 			inner[i] = new JPanel(new FlowLayout(0, 40, 0));
 			setLabels[i] = new JLabel("단어세트 개수 : " + setcount[i]);
 			idLabels[i] = new JLabel("ID: " + myId);
 			tfs[i] = new JTextField(15);
+			tfs[i].setText(fname[i]);
 			tfs[i].addActionListener(this);
-			tfs[i].setText(fname);
 			inner[i].add(setLabels[i]);
 			inner[i].add(idLabels[i]);
 			panels[i].add(inner[i], BorderLayout.NORTH);
@@ -85,17 +93,27 @@ public class ModFolder extends JPanel implements ActionListener {
 		mainPanel.add(scroll);
 		add(title, BorderLayout.NORTH);
 		add(mainPanel, BorderLayout.CENTER);
+		add(empty1, BorderLayout.EAST);
+		add(empty2, BorderLayout.WEST);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		
-		if(obj.equals(tfs)) {
-			VocaBean bean = new VocaBean();
-			
-			for (int i = 0; i < tfs.length; i++) {
-				
+		for (int i = 0; i < folders.size(); i++) {
+			if(obj == tfs[i]) {				
+				if(mgr.updateFolder(tfs[i].getText(), fname[i], myId)) {
+					fname[i] = tfs[i].getText();
+					JOptionPane.showMessageDialog(this, "폴더 명이 변경되었습니다.", "변경 완료", JOptionPane.INFORMATION_MESSAGE);
+					revalidate();
+					repaint();
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "폴더 명 변경에 실패했습니다.", "Error", JOptionPane.ERROR_MESSAGE);
+					revalidate();
+					repaint();
+				}
 			}
 		}
 	}

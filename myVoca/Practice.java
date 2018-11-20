@@ -1,23 +1,49 @@
 package myVoca;
 
 import java.awt.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
-public class Practice extends JFrame {
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
+public class Practice extends JFrame implements ActionListener{
 	
 	JLabel setNameL, descr;
-	JButton wordBtn;
+	JButton wordBtn, bookmarkBtn;
 	JPanel p1;
+	String img;
+	boolean bookmark;	// 회원 단어에서 값 받아와야 함
+	static String setName;
+	static String myId;
+	Vector<VocaBean> vbean;
+	DBMgr mgr;
 	
-	public Practice() {
+	public Practice(String myId, String setName) {		// 매개변수 추가(단어세트 이름 받아와야 함)
 		setSize(800, 550);
 		Container c = getContentPane();
 		c.setLayout(null);
 		c.setBackground(Color.WHITE);
 		
-		setNameL = new JLabel("단어세트 이름");
+		vbean = new Vector<VocaBean>();
+		mgr = new DBMgr();
+		
+		this.setName = "정보처리기사";
+		this.myId = "aaa";
+		
+		setNameL = new JLabel("단어세트 이름");		// 매개변수 입력해야 함
 		setNameL.setFont(new Font("나눔스퀘어 ExtraBold", 0, 28));
 		setNameL.setBounds(50, 50, 700, 30);
+		
+		ImageIcon img1 = new ImageIcon("myVoca/nobookmark.png");
+		bookmarkBtn = new JButton(img1);
+		bookmarkBtn.setBounds(650, 120, 35, 35);
+		bookmarkBtn.setBackground(Color.white);
+		bookmarkBtn.setBorder(null);
+		bookmarkBtn.addActionListener(this);
+
 		
 		p1 = new JPanel();
 		p1.setSize(500, 450);
@@ -26,20 +52,20 @@ public class Practice extends JFrame {
 		p1.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30));
 		
 		// p1
-		wordBtn = new JButton("단어");
+		wordBtn = new JButton("Start");
 		wordBtn.setFont(new Font("나눔스퀘어 ExtraBold", 0, 40));
 		wordBtn.setPreferredSize(new Dimension(500, 250));		// 버튼크기 조절
 		wordBtn.setBackground(Color.white);
-		String str = "설명명서런ㅇㅁㄻㅎㅁㄴㅇㄹ넝설명설명살명어어쩌고저쩌고랄라ㅜ루랄ㄹ라올안로릴ㄹㄹ리릴릴벱베킼라루니ㄹ닝라ㅜㅁㄴㅇ리라무니울미나";		// 글자수 체크해서 끝에 <br>붙이기
+		String str = "설명";		// 
 		String result = newLine(str, 20);
 		descr = new JLabel(result);
 		descr.setFont(new Font("나눔스퀘어 Bold", 0, 20));
-		
 		
 		p1.add(wordBtn);
 		p1.add(descr);
 		
 		c.add(setNameL);
+		c.add(bookmarkBtn);
 		c.add(p1);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -62,7 +88,30 @@ public class Practice extends JFrame {
 		return start+result+end;
 	}
 	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if(obj==bookmarkBtn) {
+			if(bookmark == false) {
+				VocaBean bean = new VocaBean();
+				ImageIcon img1 = new ImageIcon("myVoca/bookmark.png");
+				bookmarkBtn.setIcon(img1);
+				bookmark=true;
+				mgr.updateBookmark(bean, bookmark);
+			}
+			else if(bookmark == true) {
+				ImageIcon img1 = new ImageIcon("myVoca/nobookmark.png");
+				bookmarkBtn.setIcon(img1);
+				bookmark=false;
+				
+			}
+			System.out.println(bookmark);
+		} else if(obj==wordBtn) {
+			vbean = mgr.getWords(myId, setName);		// aaa, 정보처리기사
+		}
+	}
+	
 	public static void main(String[] args) {
-		new Practice();
+		new Practice(setName, myId);
 	}
 }

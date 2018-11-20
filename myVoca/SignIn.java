@@ -83,20 +83,30 @@ public class SignIn extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String u_id = getViewData().getId();
-		DBMgr DBId = new DBMgr();
 		Object obj = e.getSource();
 		
 		if(obj == b_overlap) {
-			if(DBId.ub(u_id) == true)
-				JOptionPane.showMessageDialog(this, "아이디가 중복입니다 다른 아이디를 입력하세요.");
-			else
-				JOptionPane.showMessageDialog(this, "생성 가능한 아이디 입니다..");
-		} else if(obj == b_acc) {
+			ovlap();
+		}
+		else if(obj == b_acc) {
 			insertMember();
-		} else if(obj == b_cancle) {
+		}
+		else if(obj == b_cancle) {
 			this.dispose();
 		}
+	}
+	
+	public void ovlap() {
+		String u_id = getViewData().getId().trim();
+		DBMgr DBId = new DBMgr();
+		
+		if(u_id.length() == 0) {
+			JOptionPane.showMessageDialog(this, "아이디가 비어있습니다. 입력하세요.");
+		}
+		else if(DBId.ub(u_id) == true)
+			JOptionPane.showMessageDialog(this, "아이디가 중복입니다 다른 아이디를 입력하세요.");
+		else
+			JOptionPane.showMessageDialog(this, "생성 가능한 아이디 입니다..");
 	}
 
 	private void insertMember() {

@@ -9,21 +9,21 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 
-public class NewFolder extends JPanel implements ActionListener {
+public class NewSet extends JPanel implements ActionListener {
 	
 	JLabel newFold;
-	JTextField folderName;
+	JTextField setName;
 	JButton cancle, create;
 	JPanel p;
-	
 	DBMgr mgr;
-	static String myId;
+	String myId, fname;
 
-	public NewFolder(String myId) {
+	public NewSet(String fname, String myId) {
 		setSize(900, 550);
 		setBackground(Color.white);
 		setLayout(null);
 		this.myId = myId;
+		this.fname = fname;
 		mgr = new DBMgr();
 		
 		TitledBorder border = new TitledBorder(new LineBorder(Color.gray));
@@ -33,12 +33,12 @@ public class NewFolder extends JPanel implements ActionListener {
 		p.setBackground(Color.white);
 		p.setLayout(null);
 		
-		newFold = new JLabel("새 폴더 생성");
+		newFold = new JLabel("새 단어세트 생성");
 		newFold.setFont(new Font("나눔스퀘어 ExtraBold", 0, 25));
 		newFold.setBounds(45, 40, 200, 30);
 		
-		folderName = new JTextField();
-		folderName.setBounds(90, 95, 350, 30);
+		setName = new JTextField();
+		setName.setBounds(90, 95, 350, 30);
 		
 		cancle = new JButton("취소");
 		cancle.setFont(new Font("나눔스퀘어 Bold", 0, 15));
@@ -53,7 +53,7 @@ public class NewFolder extends JPanel implements ActionListener {
 		create.addActionListener(this);
 		
 		p.add(newFold);
-		p.add(folderName);
+		p.add(setName);
 		p.add(cancle);
 		p.add(create);
 		add(p);
@@ -62,30 +62,27 @@ public class NewFolder extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		
+		boolean wordflag = mgr.getWordFlag(myId);
 		if(obj==cancle) {
-			boolean wordflag = mgr.getWordFlag(myId);
-			
-			if(wordflag==true) {
+			if(wordflag==false) {
 				removeAll();
 				setLayout(new BorderLayout());
-				add(new ManageSet(myId));
-				validate();
+				add(new NoSet(myId), BorderLayout.CENTER);
+				revalidate();
 				repaint();
-			}
-			else {
+			} else {
 				removeAll();
 				setLayout(new BorderLayout());
-				add(new NoSet(myId));
+				add(new ManageSet(myId), BorderLayout.CENTER);
 				revalidate();
 				repaint();
 			}
 		}
 		else if(obj==create) {
 			removeAll();
-			add(new NewSet(folderName.getText(), myId));
-			validate();
+			add(new CreateSet(fname, setName.getText(), myId));
+			revalidate();
 			repaint();
 		}
-	}
+	}	
 }

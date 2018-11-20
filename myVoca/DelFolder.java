@@ -19,13 +19,12 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-public class DeleteFolder extends JPanel implements ActionListener {
+public class DelFolder extends JPanel implements ActionListener {
 	Vector<VocaBean> folders;
 	DBMgr mgr;
 	TitledBorder tb;
 	
-	JPanel mainPanel;
-	JPanel contentPanel;
+	JPanel mainPanel, contentPanel;
 	JScrollPane scroll;
 	
 	JPanel[] panels;
@@ -34,14 +33,18 @@ public class DeleteFolder extends JPanel implements ActionListener {
 	JLabel[] idLabels;
 	JLabel[] setLabels;
 	JLabel[] folderName;
-	JLabel title;
+	JLabel title, empty1, empty2;
+	String[] fname;
+	String myId;
 	
 	int setcount[];
 	
-	public DeleteFolder(String myId) {
+	public DelFolder(String myId) {
+		setBackground(Color.WHITE);
 		mgr = new DBMgr();
 		folders = new Vector<VocaBean>();
-		folders = mgr.getfolders(myId);
+		folders = mgr.getFolders(myId);
+		this.myId = myId;
 		tb = new TitledBorder(new LineBorder(Color.BLACK));
 		mainPanel = new JPanel(new BorderLayout());
 		contentPanel = new JPanel(new GridLayout(folders.size(), 1));
@@ -53,24 +56,31 @@ public class DeleteFolder extends JPanel implements ActionListener {
 		folderName = new JLabel[folders.size()];
 		deleteBtn = new JButton[folders.size()];
 		setcount = new int[folders.size()];
+		fname = new String[folders.size()];
 		
 		title = new JLabel("내 폴더 삭제");
 		title.setFont(new Font("나눔스퀘어 Bold", 0, 28));
+		empty1 = new JLabel("             ");
+		empty2 = new JLabel("             ");
 		
 		this.setLayout(new BorderLayout(20, 20));
 		
 		for (int i = 0; i < folders.size(); i++) {
 			VocaBean bean = folders.get(i);
-			String fname = bean.getFolder().trim();
+			fname[i] = bean.getFolder().trim();
 			
-			setcount[i] = mgr.getSetCount(fname);
+			setcount[i] = mgr.getSetCount(fname[i]);
 			panels[i] = new JPanel(new BorderLayout(10, 0));
+			panels[i].setBackground(Color.WHITE);
 			panels[i].setBorder(new EtchedBorder());
 			inner[i] = new JPanel(new FlowLayout(0, 40, 0));
+			inner[i].setBackground(Color.WHITE);
+			inner[i].setBorder(new EtchedBorder());
 			setLabels[i] = new JLabel("단어세트 개수 : " + setcount[i]);
 			idLabels[i] = new JLabel("ID: " + myId);
 			deleteBtn[i] = new JButton("삭제");
-			folderName[i] = new JLabel(fname);
+			deleteBtn[i].addActionListener(this);
+			folderName[i] = new JLabel(fname[i]);
 			inner[i].add(setLabels[i]);
 			inner[i].add(idLabels[i]);
 			inner[i].add(deleteBtn[i]);
@@ -86,14 +96,20 @@ public class DeleteFolder extends JPanel implements ActionListener {
 		mainPanel.add(scroll);
 		add(title, BorderLayout.NORTH);
 		add(mainPanel, BorderLayout.CENTER);
+		add(empty1, BorderLayout.EAST);
+		add(empty2, BorderLayout.WEST);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		
-		if(obj.equals(deleteBtn)) {
-			
+		for(int i = 0; i < folders.size(); i++) {
+			if(obj == deleteBtn[i]) {
+				mgr.deleteFolder(fname[i], myId);
+				this.revalidate();
+				this.repaint();
+			}
 		}
 	}
 }

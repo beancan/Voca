@@ -6,17 +6,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NoFolder extends JPanel implements ActionListener {
+public class NoSet extends JPanel implements ActionListener {
 	ImageIcon icon;
 	Image img;
 	JLabel imgL, lb1, lb2;
 	JButton createBtn;
 	Line newLine = new Line();
+	String myId;
 	
-	public NoFolder() {
+	public NoSet(String myId) {
 		setSize(900, 550);
 		setBackground(Color.white);
 		setLayout(null);
+		this.myId = myId;
 		
 		lb1 = new JLabel("단어세트가 없어요.");
 		lb1.setFont(new Font("나눔스퀘어 ExtraBold", 0, 25));
@@ -66,10 +68,9 @@ public class NoFolder extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new NewFolder().setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new NoFolder();
+		removeAll();
+		add(new folderYN(myId));
+		validate();
+		repaint();
 	}
 }
