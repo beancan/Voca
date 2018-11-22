@@ -17,14 +17,18 @@ public class NewFolder extends JPanel implements ActionListener {
 	JPanel p;
 	
 	DBMgr mgr;
+	VocaBean bean;
 	static String myId;
+	static int num;
 
-	public NewFolder(String myId) {
+	public NewFolder(String myId, int num) {
 		setSize(900, 550);
 		setBackground(Color.white);
 		setLayout(null);
 		this.myId = myId;
+		this.num = num;
 		mgr = new DBMgr();
+		bean = new VocaBean();
 		
 		TitledBorder border = new TitledBorder(new LineBorder(Color.gray));
 		p = new JPanel();
@@ -64,12 +68,12 @@ public class NewFolder extends JPanel implements ActionListener {
 		Object obj = e.getSource();
 		
 		if(obj==cancle) {
-			boolean wordflag = mgr.getWordFlag(myId);
+			boolean flag = mgr.getWordFlag(myId);
 			
-			if(wordflag==true) {
+			if(flag == true) {
 				removeAll();
 				setLayout(new BorderLayout());
-				add(new ManageSet(myId));
+				add(new ManageFolder(myId));
 				validate();
 				repaint();
 			}
@@ -82,10 +86,28 @@ public class NewFolder extends JPanel implements ActionListener {
 			}
 		}
 		else if(obj==create) {
-			removeAll();
-			add(new NewSet(folderName.getText(), myId));
-			validate();
-			repaint();
+			if(num == 1) {
+				bean.setFolder(folderName.getText());
+				bean.setId(myId);
+				boolean flag = mgr.insertFolder(bean);
+				if(flag==true) {
+					JOptionPane.showMessageDialog(this, "폴더가 생성되었습니다.");
+					removeAll();
+					setLayout(new BorderLayout());
+					add(new ManageFolder(myId));
+					validate();
+					repaint();
+				} else {
+					JOptionPane.showMessageDialog(this, "폴더 생성에 실패하였습니다.");
+				}
+				
+				
+			} else if (num == 2) {
+				removeAll();
+				add(new NewSet(folderName.getText(), myId));
+				validate();
+				repaint();
+			}
 		}
 	}
 }

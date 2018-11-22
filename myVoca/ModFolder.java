@@ -57,6 +57,7 @@ public class ModFolder extends JPanel implements ActionListener {
 		setLabels = new JLabel[folders.size()];
 		setcount = new int[folders.size()];
 		tfs = new JTextField[folders.size()];
+		fname = new String[folders.size()];
 		
 		title = new JLabel("내 폴더 수정");
 		title.setFont(new Font("나눔스퀘어 Bold", 0, 28));
@@ -67,7 +68,6 @@ public class ModFolder extends JPanel implements ActionListener {
 		
 		for (i = 0; i < folders.size(); i++) {
 			VocaBean bean = folders.get(i);
-			fname = new String[folders.size()];
 			fname[i] = bean.getFolder().trim();
 			
 			setcount[i] = mgr.getSetCount(fname[i]);

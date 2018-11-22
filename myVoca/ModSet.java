@@ -20,7 +20,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class ModSet extends JPanel implements ActionListener {
 	
@@ -46,6 +48,8 @@ public class ModSet extends JPanel implements ActionListener {
 	String myId, sname;
 	
 	public ModSet(String sname, String myId) {
+		
+		System.out.println("ModSet 생성");
 		setSize(900, 550);
 		setBackground(Color.WHITE);
 		this.myId = myId;
@@ -53,7 +57,7 @@ public class ModSet extends JPanel implements ActionListener {
 		mgr = new DBMgr();
 		sets = new Vector<VocaBean>();
 		folders = new Vector<VocaBean>();
-		sets = mgr.getWords(myId, sname);
+		sets = mgr.getWordDesc(sname, myId);
 		folders = mgr.getFolders(myId);
 		TitledBorder border = new TitledBorder(new LineBorder(Color.gray));
 		value = new String[sets.size()][2];
@@ -72,7 +76,7 @@ public class ModSet extends JPanel implements ActionListener {
 			VocaBean bean = folders.get(i);
 			fcombo[i] = bean.getFolder().trim();
 		}
-		fcombo[folders.size()] = null;
+		fcombo[folders.size()] = "폴더없음";
 		
 		mainPanel = new JPanel(new GridLayout(2, 1));
 		mainPanel.setBackground(Color.WHITE);
@@ -143,6 +147,14 @@ public class ModSet extends JPanel implements ActionListener {
 		table = new JTable(model);
 		table.setBackground(Color.WHITE);
 		table.setFillsViewportHeight(true);
+		JTableHeader header = table.getTableHeader();
+		header.setBackground(Color.darkGray);
+		header.setForeground(Color.white);
+		header.setFont(new Font("나눔고딕 ExtraBold", 0, 16));
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+		table.getColumnModel().getColumn(1).setCellRenderer(cellRenderer);
 		sc = new JScrollPane(table);
 		sc.setBackground(Color.WHITE);
 		sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -197,19 +209,25 @@ public class ModSet extends JPanel implements ActionListener {
 		else if(obj == modBtn) {
 			DefaultTableModel m = (DefaultTableModel)table.getModel();
 			VocaBean bean = new VocaBean();
-			boolean flag = mgr.getSetWordsFlag(myId, sname);
-			if(flag == true) {
-				mgr.deleteSetWord(sname, myId);
-				
-				for (int i = 0; i < m.getRowCount(); i++) {
+			String str = combo.getSelectedItem().toString();
+			
+			if(str == "폴더없음") {
+				try {
+					mgr.deleteSetWord(sname, myId);
 					bean.setId(myId);
 					bean.setSetname(sname);
-					bean.setFolder(combo.getSelectedItem().toString());
-					bean.setWord((String)m.getValueAt(i, 0));
-					bean.setDesc((String)m.getValueAt(i, 1));
+					bean.setFolder(str);
 					
-					mgr.updateSetFolder(bean);
-					mgr.insertWords(bean);
+					for (int i = 0; i < m.getRowCount(); i++) {
+						bean.setWord((String)m.getValueAt(i, 0));
+						bean.setDesc((String)m.getValueAt(i, 1));
+						mgr.insertWords(bean);
+					}
+					
+					mgr.updateSetNullFolder(bean);
+				}
+				catch (Exception e2) {
+					e2.printStackTrace();
 				}
 				
 				removeAll();
@@ -217,22 +235,24 @@ public class ModSet extends JPanel implements ActionListener {
 				revalidate();
 				repaint();
 			}
-			else if(flag == false) {
-				for (int i = 0; i < m.getRowCount(); i++) {
-					
+			else {
+				try {
+					mgr.deleteSetWord(sname, myId);
 					bean.setId(myId);
 					bean.setSetname(sname);
+					bean.setFolder(str);
 					
-					if(combo.getSelectedItem() == null)
-						bean.setFolder(null);
-					else
-						bean.setFolder(combo.getSelectedItem().toString());
-					
-					bean.setWord((String)m.getValueAt(i, 0));
-					bean.setDesc((String)m.getValueAt(i, 1));
+					for (int i = 0; i < m.getRowCount(); i++) {
+						
+						bean.setWord((String)m.getValueAt(i, 0));
+						bean.setDesc((String)m.getValueAt(i, 1));
+						mgr.insertWords(bean);
+					}
 					
 					mgr.updateSetFolder(bean);
-					mgr.insertWords(bean);
+				}
+				catch (Exception e2) {
+					e2.printStackTrace();
 				}
 				
 				removeAll();

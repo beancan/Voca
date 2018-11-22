@@ -24,7 +24,7 @@ public class DelFolder extends JPanel implements ActionListener {
 	DBMgr mgr;
 	TitledBorder tb;
 	
-	JPanel mainPanel, contentPanel;
+	JPanel mainPanel, contentPanel, titlePnl, bodyPnl;
 	JScrollPane scroll;
 	
 	JPanel[] panels;
@@ -40,12 +40,20 @@ public class DelFolder extends JPanel implements ActionListener {
 	int setcount[];
 	
 	public DelFolder(String myId) {
-		setBackground(Color.WHITE);
+		setSize(900, 550);
+		setBackground(Color.white);
+		setLayout(null);
 		mgr = new DBMgr();
 		folders = new Vector<VocaBean>();
 		folders = mgr.getFolders(myId);
 		this.myId = myId;
 		tb = new TitledBorder(new LineBorder(Color.BLACK));
+		titlePnl = new JPanel(new BorderLayout());
+		titlePnl.setBackground(Color.white);
+		titlePnl.setBounds(0, 0, 850, 50);
+		bodyPnl = new JPanel(new BorderLayout());
+		bodyPnl.setBackground(Color.red);
+		bodyPnl.setBounds(50, 60, 750, 400);
 		mainPanel = new JPanel(new BorderLayout());
 		contentPanel = new JPanel(new GridLayout(folders.size(), 1));
 		
@@ -59,11 +67,10 @@ public class DelFolder extends JPanel implements ActionListener {
 		fname = new String[folders.size()];
 		
 		title = new JLabel("³» Æú´õ »èÁ¦");
-		title.setFont(new Font("³ª´®½ºÄù¾î Bold", 0, 28));
+		title.setFont(new Font("³ª´®°íµñ ExtraBold", 0, 28));
+		title.setHorizontalAlignment(JLabel.CENTER);
 		empty1 = new JLabel("             ");
 		empty2 = new JLabel("             ");
-		
-		this.setLayout(new BorderLayout(20, 20));
 		
 		for (int i = 0; i < folders.size(); i++) {
 			VocaBean bean = folders.get(i);
@@ -75,12 +82,17 @@ public class DelFolder extends JPanel implements ActionListener {
 			panels[i].setBorder(new EtchedBorder());
 			inner[i] = new JPanel(new FlowLayout(0, 40, 0));
 			inner[i].setBackground(Color.WHITE);
-			inner[i].setBorder(new EtchedBorder());
 			setLabels[i] = new JLabel("´Ü¾î¼¼Æ® °³¼ö : " + setcount[i]);
+			setLabels[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
 			idLabels[i] = new JLabel("ID: " + myId);
+			idLabels[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
 			deleteBtn[i] = new JButton("»èÁ¦");
+			deleteBtn[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
+			deleteBtn[i].setBackground(Color.black);
+			deleteBtn[i].setForeground(Color.white);
 			deleteBtn[i].addActionListener(this);
-			folderName[i] = new JLabel(fname[i]);
+			folderName[i] = new JLabel("      " + fname[i]);
+			folderName[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 30));
 			inner[i].add(setLabels[i]);
 			inner[i].add(idLabels[i]);
 			inner[i].add(deleteBtn[i]);
@@ -94,10 +106,10 @@ public class DelFolder extends JPanel implements ActionListener {
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		mainPanel.add(scroll);
-		add(title, BorderLayout.NORTH);
-		add(mainPanel, BorderLayout.CENTER);
-		add(empty1, BorderLayout.EAST);
-		add(empty2, BorderLayout.WEST);
+		titlePnl.add(title, BorderLayout.CENTER);
+		bodyPnl.add(mainPanel);
+		add(titlePnl);
+		add(bodyPnl);
 	}
 
 	@Override
@@ -106,9 +118,12 @@ public class DelFolder extends JPanel implements ActionListener {
 		
 		for(int i = 0; i < folders.size(); i++) {
 			if(obj == deleteBtn[i]) {
+				System.out.println(fname[i] + " / " + myId);
 				mgr.deleteFolder(fname[i], myId);
-				this.revalidate();
-				this.repaint();
+				removeAll();
+				add(new DelFolder(myId));
+				revalidate();
+				repaint();
 			}
 		}
 	}

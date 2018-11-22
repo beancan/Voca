@@ -67,7 +67,7 @@ public class folderYN extends JPanel implements ActionListener{
 		
 		} else if(obj==yesBtn) {
 			removeAll();
-			add(new NewFolder(myId));
+			add(new NewFolder(myId, 2));
 			validate();
 			repaint();
 		}

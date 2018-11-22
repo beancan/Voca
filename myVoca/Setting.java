@@ -38,6 +38,8 @@ public class Setting extends JPanel implements ActionListener {
 		wdExBtn.setBackground(Color.white);
 		wdExBtn.setBounds(150, 255, 210, 45);
 		wdExBtn.setBorderPainted(false);
+		wdExBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		wdExBtn.addActionListener(this);
 		
 		logoutBtn = new JButton("·Î±×¾Æ¿ô");
 		logoutBtn.setFont(new Font("³ª´®½ºÄù¾î Bold", 0, 24));
@@ -76,11 +78,16 @@ public class Setting extends JPanel implements ActionListener {
 			body.add(new pwReset(id));
 			revalidate();
 			repaint();
-		} else if(obj==logoutBtn) {
+		}
+		else if(obj==logoutBtn) {
 			logoutBtn = (JButton) e.getSource();
 			Window win = SwingUtilities.getWindowAncestor(logoutBtn);
 			win.dispose();
 			new login();
+		}
+		else if(obj==wdExBtn) {
+			DBMgr dba = new DBMgr();
+			dba.outputWd(id);
 		}
 	}
 }

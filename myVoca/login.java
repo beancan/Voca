@@ -20,6 +20,7 @@ public class login extends JFrame implements ActionListener {
 	
 	public login() {
 		setSize(1024, 680);
+		setResizable(false);
 		setTitle("±â¾ï³ëÆ®");
 		Container c = getContentPane();
 		c.setLayout(null);
@@ -80,6 +81,7 @@ public class login extends JFrame implements ActionListener {
 		find.setBounds(610, 190, 150, 30);
 		find.setBackground(Color.WHITE);
 		find.setBorderPainted(false);
+		find.addActionListener(this);
 		
 		notlg = new JLabel("");
 		notlg.setFont(new Font("³ª´®½ºÄù¾î Bold", 0, 14));
@@ -131,6 +133,9 @@ public class login extends JFrame implements ActionListener {
 		}
 		else if(obj == join) {
 			new SignIn();
+		}
+		else if(obj == find) {
+			new findIdPw().setVisible(true);
 		}
 	}
 	

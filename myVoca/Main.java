@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -49,7 +50,7 @@ public class Main extends MFrame {
 	Integer pl1 = 60, pl2 = 60, pl3 = 60;
 	
 	public Main(String myId) {
-		super(1024, 680, new Color(255, 255, 255), true);
+		super(1024, 680, new Color(255, 255, 255), false);
 		this.myId = myId;
 		setTitle("기억노트");
 		Container c = getContentPane();
@@ -70,6 +71,7 @@ public class Main extends MFrame {
 		home = new ImageIcon(homeImg);
 		homeBtn = new JButton(home);
 		homeBtn.setSize(100, 100);
+		homeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		homeBtn.setBorderPainted(false);
 		homeBtn.setContentAreaFilled(false);
 		homeBtn.setFocusPainted(false);
@@ -154,10 +156,44 @@ public class Main extends MFrame {
 				repaint();
 			}
 		});
+		
+		quizBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(new Quiz_List(myId));
+				revalidate();
+				repaint();
+			}
+		});
+		
+		bookmarkBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(new ViewBookmark(myId));
+				revalidate();
+				repaint();
+			}
+		});
+		
+		friendsBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
+				mainPanel.removeAll();
+				mainPanel.add(new Friends(myId));
+				revalidate();
+				repaint();
+			}
+		});
 
 		settingsBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				panel.setVisible(false);
 				mainPanel.removeAll();
 				mainPanel.add(new Setting(myId));
 				revalidate();
@@ -168,9 +204,11 @@ public class Main extends MFrame {
 		
 		// 하위 메뉴 구현
 		myvocaBtn.addMouseListener(new MouseAdapter() {
+			boolean flag = false;
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				panel.setVisible(true);
+				flag = !flag;
+				panel.setVisible(flag);
 				tm1 = new Timer(20, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -192,7 +230,7 @@ public class Main extends MFrame {
 					}
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						panel.setVisible(false);
+						panel.setVisible(flag = false);
 						mainPanel.removeAll();
 						mainPanel.add(new ManageFolder(myId));
 						revalidate();
@@ -203,7 +241,7 @@ public class Main extends MFrame {
 				setBtn.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						panel.setVisible(false);
+						panel.setVisible(flag = false);
 						mainPanel.removeAll();
 						mainPanel.add(new ManageSet(myId));
 						revalidate();

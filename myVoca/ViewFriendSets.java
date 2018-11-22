@@ -3,7 +3,6 @@ package myVoca;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -11,23 +10,21 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-public class ViewSet extends JPanel implements MouseListener {
+public class ViewFriendSets extends JPanel implements MouseListener {
 	
 	Vector<VocaBean> sets;
 	DBMgr mgr;
 	TitledBorder tb;
 	
 	JScrollPane sc;
-	JButton addSetBtn, addNewSetBtn;
 	JPanel setPanel, headPanel, footPanel, contentPanel, titlePanel, mainPanel;
-	JPanel leftPanel, rightPanel, btnPanel;
+	JPanel leftPanel, rightPanel;
 	JLabel title;
 	JPanel[] panels;
 	JPanel[] inner;
@@ -36,15 +33,13 @@ public class ViewSet extends JPanel implements MouseListener {
 	String[] sname;
 	int[] setcount;
 	
-	String myId, fname;
+	String friendId;
 	
-	public ViewSet(String fname, String myId) {
-		
+	public ViewFriendSets(String friendId) {
 		mgr = new DBMgr();
 		sets = new Vector<VocaBean>();
-		sets = mgr.getMySets(fname, myId);
-		this.myId = myId;
-		this.fname = fname;
+		sets = mgr.getAllSets(friendId);
+		this.friendId = friendId;
 		
 		panels = new JPanel[sets.size()];
 		inner = new JPanel[sets.size()];
@@ -67,27 +62,15 @@ public class ViewSet extends JPanel implements MouseListener {
 		headPanel.setAlignmentX(RIGHT_ALIGNMENT);
 		footPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		footPanel.setBackground(Color.WHITE);
-		titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		titlePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		titlePanel.setBackground(Color.WHITE);
-		title = new JLabel("   " + fname);
+		title = new JLabel(friendId + "의 단어세트");
 		title.setFont(new Font("나눔스퀘어 ExtraBold", 0, 28));
-		title.setHorizontalAlignment(JLabel.LEFT);
+		title.setHorizontalAlignment(JLabel.CENTER);
 		leftPanel = new JPanel();
 		leftPanel.setBackground(Color.WHITE);
 		rightPanel = new JPanel();
 		rightPanel.setBackground(Color.WHITE);
-		btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		btnPanel.setBackground(Color.WHITE);
-		addSetBtn = new JButton("기존 단어세트 추가");
-		addSetBtn.setBackground(Color.BLACK);
-		addSetBtn.setForeground(Color.WHITE);
-		addSetBtn.setPreferredSize(new Dimension(150, 40));
-		addSetBtn.addMouseListener(this);
-		addNewSetBtn = new JButton("새 단어세트 추가");
-		addNewSetBtn.setBackground(Color.BLACK);
-		addNewSetBtn.setForeground(Color.WHITE);
-		addNewSetBtn.setPreferredSize(new Dimension(150, 40));
-		addNewSetBtn.addMouseListener(this);
 		sc = new JScrollPane(setPanel);
 		sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		sc.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -96,14 +79,14 @@ public class ViewSet extends JPanel implements MouseListener {
 			VocaBean bean = sets.get(i);
 			sname[i] = bean.getSetname().trim();
 			
-			setcount[i] = mgr.getSetWordsCount(sname[i], myId);
+			setcount[i] = mgr.getSetWordsCount(sname[i], friendId);
 			panels[i] = new JPanel(new BorderLayout());
 			panels[i].setBorder(new EtchedBorder());
 			inner[i] = new JPanel(new FlowLayout(0, 40, 0));
 			inner[i].setBackground(Color.WHITE);
 			setcntLbls[i] = new JLabel("단어 개수 : " + setcount[i]);
 			setcntLbls[i].setFont(new Font("나눔스퀘어 ExtraBold", 0, 15));
-			idLbls[i] = new JLabel("ID: " + myId);
+			idLbls[i] = new JLabel("ID: " + friendId);
 			idLbls[i].setFont(new Font("나눔스퀘어 ExtraBold", 0, 15));
 			inner[i].add(setcntLbls[i]);
 			inner[i].add(idLbls[i]);
@@ -118,11 +101,8 @@ public class ViewSet extends JPanel implements MouseListener {
 		}
 		
 		contentPanel.add(sc, BorderLayout.CENTER);
-		btnPanel.add(addSetBtn);
-		btnPanel.add(addNewSetBtn);
 		titlePanel.add(title);
 		headPanel.add(title);
-		headPanel.add(btnPanel);
 		mainPanel.add(headPanel, BorderLayout.NORTH);
 		mainPanel.add(leftPanel, BorderLayout.WEST);
 		mainPanel.add(rightPanel, BorderLayout.EAST);
@@ -138,23 +118,10 @@ public class ViewSet extends JPanel implements MouseListener {
 		for (int i = 0; i < sets.size(); i++) {
 			if(obj == panels[i]) {
 				removeAll();
-				add(new ViewSetWord(sname[i], myId), BorderLayout.CENTER);
+				add(new ViewFriendWords(sname[i], friendId));
 				revalidate();
 				repaint();
 			}
-		}
-		
-		if(obj == addSetBtn) {
-			removeAll();
-			add(new AddOtherSet(fname, myId));
-			revalidate();
-			repaint();
-		}
-		else if(obj == addNewSetBtn) {
-			removeAll();
-			add(new NewSet(fname, myId));
-			revalidate();
-			repaint();
 		}
 	}
 

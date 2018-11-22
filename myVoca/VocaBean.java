@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class VocaBean {
 	private String id;
+	private String friend_id;
 	private String pw;
 	private String pwd2;
 	private String name;
@@ -13,6 +14,7 @@ public class VocaBean {
 	private String desc;
 	private String folder;
 	private String setname;
+	private int bookmark;
 	
 	// Get, Set id
 	public String getId() {
@@ -96,5 +98,21 @@ public class VocaBean {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getBookmark() {
+		return bookmark;
+	}
+
+	public void setBookmark(int bookmark) {
+		this.bookmark = bookmark;
+	}
+
+	public String getFriend_id() {
+		return friend_id;
+	}
+
+	public void setFriend_id(String friend_id) {
+		this.friend_id = friend_id;
 	}
 }

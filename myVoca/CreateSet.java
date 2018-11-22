@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class CreateSet extends JPanel implements ActionListener {
 	
@@ -37,10 +38,11 @@ public class CreateSet extends JPanel implements ActionListener {
 		setBackground(Color.WHITE);
 		this.myId = myId;
 		this.fname = fname;
+		System.out.println(fname);
 		this.sname = sname;
 		mgr = new DBMgr();
 		sets = new Vector<VocaBean>();
-		sets = mgr.getWords(myId, sname);
+		sets = mgr.getWordDesc(myId, sname);
 		TitledBorder border = new TitledBorder(new LineBorder(Color.gray));
 		
 		mainPanel = new JPanel(new GridLayout(2, 1));
@@ -106,6 +108,10 @@ public class CreateSet extends JPanel implements ActionListener {
 		table = new JTable(model);
 		table.setBackground(Color.WHITE);
 		table.setFillsViewportHeight(true);
+		JTableHeader header = table.getTableHeader();
+		header.setBackground(Color.darkGray);
+		header.setForeground(Color.white);
+		header.setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
 		sc = new JScrollPane(table);
 		sc.setBackground(Color.WHITE);
 		sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -156,9 +162,17 @@ public class CreateSet extends JPanel implements ActionListener {
 			DefaultTableModel m = (DefaultTableModel)table.getModel();
 			VocaBean bean = new VocaBean();
 			bean.setId(myId);
-			bean.setFolder(fname);			
+			System.out.println(fname instanceof String);
+			if(fname == null) {
+				bean.setFolder("null");
+			}
+			else {
+				bean.setFolder(fname);
+				if(mgr.getThisFolder(myId, fname) == false) {
+					mgr.insertFolder(bean);
+				}
+			}
 			bean.setSetname(sname);
-			mgr.insertFolder(bean);
 			
 			if(mgr.insertSet(bean)) {
 				for (int i = 0; i < m.getRowCount(); i++) {

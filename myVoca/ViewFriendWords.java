@@ -9,43 +9,37 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 
-public class ViewSetWord extends JPanel implements ActionListener{
+public class ViewFriendWords extends JPanel implements ActionListener {
 
 	JPanel parentPnl, mainPnl, titlePnl, buttonPnl, contentPnl;
 	JPanel wordPnl, descPnl;
 	JLabel titleL, wordL, descL, descNull;
-	JButton modBtn, studyBtn, quizBtn;
+	JButton studyBtn, quizBtn;
 	Vector<VocaBean> words;
 	DBMgr mgr;
 	
 	JScrollPane sc;
 	GridBagLayout gbl;
-	String myId, setName;
+	String friendId, setName;
 	
 	private JPanel[] panels;
 	private JPanel[] wordPnls;
 	private JPanel[] descPnls;
-	private JButton[] bmarkBtn;
 	private JLabel[] word;
 	private JLabel[] desc;
-	private ImageIcon img;
 	private String[] w, d;
-	private JPanel wordTitlePnl;
-	private JPanel descTitlePnl;
-	private JLabel wordTitleL;
-	private JLabel descTitleL;
 	
-	public ViewSetWord(String setName, String myId) {
+	public ViewFriendWords(String setName, String friendId) {
 		setSize(900, 550);
 		setBackground(Color.blue);
 		setLayout(new BorderLayout());
 		
-		this.myId = myId;
+		this.friendId = friendId;
 		this.setName = setName;
 		gbl = new GridBagLayout();
 		mgr = new DBMgr();
 		words = new Vector<VocaBean>();
-		words = mgr.getWordDesc(setName, myId);
+		words = mgr.getWordDesc(setName, friendId);
 		
 		// ÆÐ³Î
 		parentPnl = new JPanel(null);
@@ -68,7 +62,6 @@ public class ViewSetWord extends JPanel implements ActionListener{
 		descPnl.setBackground(Color.darkGray);
 		descPnl.setBounds(270, 85, 520, 40);
 		
-		
 		// ¶óº§
 		titleL = new JLabel(setName);
 		titleL.setFont(new Font("³ª´®°íµñ ExtraBold", 0, 30));
@@ -85,12 +78,6 @@ public class ViewSetWord extends JPanel implements ActionListener{
 		descNull.setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
 		
 		// ¹öÆ°
-		modBtn = new JButton("¼öÁ¤");
-		modBtn.setBackground(Color.BLACK);
-		modBtn.setForeground(Color.WHITE);
-		modBtn.setPreferredSize(new Dimension(70, 40));
-		modBtn.setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
-		modBtn.addActionListener(this);
 		studyBtn = new JButton("ÇÐ½À");
 		studyBtn.setBackground(Color.BLACK);
 		studyBtn.setForeground(Color.WHITE);
@@ -107,7 +94,6 @@ public class ViewSetWord extends JPanel implements ActionListener{
 		panels = new JPanel[words.size()];
 		wordPnls = new JPanel[words.size()];
 		descPnls = new JPanel[words.size()];
-		bmarkBtn = new JButton[words.size()];
 		word = new JLabel[words.size()];
 		desc = new JLabel[words.size()];
 		w = new String[words.size()];
@@ -133,21 +119,9 @@ public class ViewSetWord extends JPanel implements ActionListener{
 			desc[i].setHorizontalAlignment(JLabel.CENTER);
 			desc[i].setPreferredSize(new Dimension(300, 30));
 			descPnls[i].add(desc[i], FlowLayout.LEFT);
-			if(words.elementAt(i).getBookmark() == 1) {
-				img = new ImageIcon("myVoca/bookmark.png");
-				bmarkBtn[i] = new JButton(img);
-			}
-			else if(words.elementAt(i).getBookmark() == 0) {
-				img = new ImageIcon("myVoca/noBookmark.png");
-				bmarkBtn[i] = new JButton(img);
-			}
-			bmarkBtn[i].setBackground(Color.WHITE);
-			bmarkBtn[i].setBorder(null);
-			bmarkBtn[i].addActionListener(this);
 			panels[i] = new JPanel(gbl);
 			gbInsert(wordPnls[i], panels[i], 0, 0, 1, 1, 0.1, 1.0);
 			gbInsert(descPnls[i], panels[i], 1, 0, 1, 1, 1.0, 1.0);
-			gbInsert(bmarkBtn[i], panels[i], 2, 0, 1, 1, 0.1, 1.0);
 			panels[i].setBorder(new EtchedBorder());
 			panels[i].setBackground(Color.WHITE);
 			gbInsert(panels[i], contentPnl, 0, i, 1, 1, 1.0, 1.0);
@@ -164,7 +138,6 @@ public class ViewSetWord extends JPanel implements ActionListener{
 		descPnl.add(descL);
 		descPnl.add(descNull, BorderLayout.EAST);
 		mainPnl.add(sc);
-		buttonPnl.add(modBtn);
 		buttonPnl.add(studyBtn);
 		buttonPnl.add(quizBtn);
 		titlePnl.add(titleL);
@@ -193,50 +166,18 @@ public class ViewSetWord extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		VocaBean bean = new VocaBean();
-		
-		if(obj == modBtn) {
+	
+		if(obj == studyBtn) {
 			removeAll();
-			add(new ModSet(setName, myId));
-			revalidate();
-			repaint();
-		}
-		else if(obj == studyBtn) {
-			removeAll();
-			add(new ViewWord(setName, myId));
+			add(new ViewFriendWord(setName, friendId));
 			revalidate();
 			repaint();
 		}
 		else if(obj == quizBtn) {
 			removeAll();
-			add(new Quiz_select(myId, setName));
+			add(new Quiz_select(friendId, setName));
 			revalidate();
 			repaint();
-		}
-		
-		for (int i = 0; i < words.size(); i++) {
-			if(obj == bmarkBtn[i]) {
-				if(words.elementAt(i).getBookmark() == 1) {
-					bmarkBtn[i].setIcon(new ImageIcon("myVoca/noBookmark.png"));
-					bean.setId(myId);
-					bean.setWord(words.elementAt(i).getWord());
-					mgr.updateBookmark(bean, false);
-					removeAll();
-					add(new ViewSetWord(setName, myId));
-					revalidate();
-					repaint();
-				}
-				else if(words.elementAt(i).getBookmark() == 0) {
-					bmarkBtn[i].setIcon(new ImageIcon("myVoca/bookmark.png"));
-					bean.setId(myId);
-					bean.setWord(words.elementAt(i).getWord());
-					mgr.updateBookmark(bean, true);
-					removeAll();
-					add(new ViewSetWord(setName, myId));
-					revalidate();
-					repaint();
-				}
-			}
 		}
 	}
 }

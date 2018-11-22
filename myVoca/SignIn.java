@@ -1,6 +1,10 @@
 package myVoca;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -22,39 +26,50 @@ public class SignIn extends JFrame implements ActionListener {
 	public SignIn() { // È¸¿ø°¡ÀÔ ·¹ÀÌ¾Æ¿ô
 
 		super("È¸¿ø°¡ÀÔ");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLayout(null);
-		setResizable(false);
+		setSize(1024, 680);
+		Container c = getContentPane();
+		c.setLayout(null);
+		c.setBackground(Color.white);
 		
 		logo = new JLabel("È¸ ¿ø °¡ ÀÔ");
-		logo.setFont(new Font("Dialog", Font.BOLD, 50));
+		logo.setFont(new Font("³ª´®½ºÄù¾î ExtraBold", Font.BOLD, 50));
 		
 		id = new JLabel("ID");
-		id.setFont(new Font("Dialog", Font.PLAIN, 20));
+		id.setFont(new Font("³ª´®°íµñ Bold", Font.PLAIN, 20));
 		b_overlap = new JButton("Áßº¹È®ÀÎ");
+		b_overlap.setFont(new Font("³ª´®½ºÄù¾î ExtraBold", 0, 16));
+		b_overlap.setBackground(Color.black);
+		b_overlap.setForeground(Color.white);
 		txt_id = new JTextField();
 		pw = new JLabel("PW");
-		pw.setFont(new Font("Dialog", Font.PLAIN, 20));
+		pw.setFont(new Font("³ª´®°íµñ Bold", Font.PLAIN, 20));
 		pwTf = new JPasswordField();
 		pw2 = new JLabel("PW ÀçÀÔ·Â");
-		pw2.setFont(new Font("Dialog", Font.PLAIN, 20));
+		pw2.setFont(new Font("³ª´®°íµñ Bold", Font.PLAIN, 20));
 		pwTf2 = new JPasswordField();
 		name = new JLabel("ÀÌ¸§");
-		name.setFont(new Font("Dialog", Font.PLAIN, 20));
+		name.setFont(new Font("³ª´®°íµñ Bold", Font.PLAIN, 20));
 		txt_Name = new JTextField();
 		email = new JLabel("ÀÌ¸ÞÀÏ");
-		email.setFont(new Font("Dialog", Font.PLAIN, 20));
+		email.setFont(new Font("³ª´®°íµñ Bold", Font.PLAIN, 20));
 		txt_email = new JTextField();
 		birth = new JLabel("»ý³â¿ùÀÏ");
-		birth.setFont(new Font("Dialog", Font.PLAIN, 20));
+		birth.setFont(new Font("³ª´®°íµñ Bold", Font.PLAIN, 20));
 		txt_birth = new JTextField();
 		b_acc = new JButton("°¡ÀÔ");
+		b_acc.setBackground(Color.black);
+		b_acc.setForeground(Color.white);
+		b_acc.setFont(new Font("³ª´®½ºÄù¾î ExtraBold", 0, 16));
 		b_cancle = new JButton("Ãë¼Ò");
+		b_cancle.setBackground(Color.black);
+		b_cancle.setForeground(Color.white);
+		b_cancle.setFont(new Font("³ª´®½ºÄù¾î ExtraBold", 0, 16));
 		
-		logo.setBounds(380, 100, 300, 50);
-		id.setBounds(330, 200, 50, 20);
+		
+		logo.setBounds(405, 100, 300, 50);
+		id.setBounds(340, 200, 50, 20);
 		txt_id.setBounds(380,195,295,30);
-		b_overlap.setBounds(690,195,90,30);
+		b_overlap.setBounds(690,195,100,30);
 		pw.setBounds(330,240,50,20);
 		pwTf.setBounds(380,235,295,30);
 		pw2.setBounds(270,280,100,20);
@@ -65,19 +80,23 @@ public class SignIn extends JFrame implements ActionListener {
 		txt_email.setBounds(525, 315, 150, 30);
 		birth.setBounds(288,360,80,20);
 		txt_birth.setBounds(380, 355, 295, 30);
-		b_acc.setBounds(580, 400, 90, 50);
-		b_cancle.setBounds(690, 400, 90, 50);
+		b_acc.setBounds(690, 400, 70, 35);
+		b_cancle.setBounds(600, 400, 70, 35);
 		
-		add(logo); add(id); add(txt_id); add(b_overlap); add(pw);
-		add(pwTf); add(pw2); add(pwTf2); add(name); add(txt_Name);
-		add(email); add(txt_email); add(birth); add(txt_birth);
-		add(b_acc); add(b_cancle);
+		c.add(logo); c.add(id); c.add(txt_id); c.add(b_overlap); c.add(pw);
+		c.add(pwTf); c.add(pw2); c.add(pwTf2); c.add(name); c.add(txt_Name);
+		c.add(email); c.add(txt_email); c.add(birth); c.add(txt_birth);
+		c.add(b_acc); c.add(b_cancle);
 		
 		b_overlap.addActionListener(this);
 		b_acc.addActionListener(this);
 		b_cancle.addActionListener(this);
 		
-		setBounds(100, 50, 1024, 680);
+		Dimension frameSize = this.getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((screenSize.width-frameSize.width)/2, (screenSize.height - frameSize.height)/2);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setVisible(true);
 	}
 	

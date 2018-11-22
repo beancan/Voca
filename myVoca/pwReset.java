@@ -38,6 +38,10 @@ class CheckPop extends JFrame implements ActionListener{
 			noticeL = new JLabel("비밀번호 변경에 실패하였습니다.");
 			noticeL.setFont(new Font("나눔스퀘어 Bold", 0, 16));
 			noticeL.setBounds(80, 50, 250, 30);
+		} else if (a==5) {
+			noticeL = new JLabel("일치하는 정보가 없습니다.");
+			noticeL.setFont(new Font("나눔스퀘어 Bold", 0, 16));
+			noticeL.setBounds(100, 50, 300, 30);
 		} else if (a==6) {
 			noticeL = new JLabel("입력하지 않은 항목이 있습니다.");
 			noticeL.setFont(new Font("나눔스퀘어 Bold", 0, 16));

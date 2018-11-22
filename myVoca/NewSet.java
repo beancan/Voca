@@ -20,7 +20,7 @@ public class NewSet extends JPanel implements ActionListener {
 
 	public NewSet(String fname, String myId) {
 		setSize(900, 550);
-		setBackground(Color.white);
+		setBackground(Color.WHITE);
 		setLayout(null);
 		this.myId = myId;
 		this.fname = fname;
@@ -67,13 +67,13 @@ public class NewSet extends JPanel implements ActionListener {
 			if(wordflag==false) {
 				removeAll();
 				setLayout(new BorderLayout());
-				add(new NoSet(myId), BorderLayout.CENTER);
+				add(new NoSet(myId));
 				revalidate();
 				repaint();
 			} else {
 				removeAll();
 				setLayout(new BorderLayout());
-				add(new ManageSet(myId), BorderLayout.CENTER);
+				add(new ManageSet(myId));
 				revalidate();
 				repaint();
 			}

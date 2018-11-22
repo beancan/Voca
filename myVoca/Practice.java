@@ -44,7 +44,6 @@ public class Practice extends JFrame implements ActionListener{
 		bookmarkBtn.setBorder(null);
 		bookmarkBtn.addActionListener(this);
 
-		
 		p1 = new JPanel();
 		p1.setSize(500, 450);
 		p1.setBackground(Color.white);
@@ -97,17 +96,18 @@ public class Practice extends JFrame implements ActionListener{
 				ImageIcon img1 = new ImageIcon("myVoca/bookmark.png");
 				bookmarkBtn.setIcon(img1);
 				bookmark=true;
-				mgr.updateBookmark(bean, bookmark);
+				//mgr.updateBookmark(bean, bookmark);
 			}
 			else if(bookmark == true) {
+				VocaBean bean = new VocaBean();
 				ImageIcon img1 = new ImageIcon("myVoca/nobookmark.png");
 				bookmarkBtn.setIcon(img1);
 				bookmark=false;
-				
+				//mgr.updateBookmark(bean, bookmark);
 			}
 			System.out.println(bookmark);
 		} else if(obj==wordBtn) {
-			vbean = mgr.getWords(myId, setName);		// aaa, 정보처리기사
+			vbean = mgr.getWordDesc(myId, setName);		// aaa, 정보처리기사
 		}
 	}
 	

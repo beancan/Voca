@@ -19,7 +19,6 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 	TitledBorder tb;
 	JPanel mainPanel, headPanel, footPanel, btnPanel, titlePanel;
 	JPanel folderPanel;
-	JPanel leftPnl, rightPnl;
 	JButton crtBtn, modBtn, delBtn; // 폴더 추가, 수정, 삭제버튼
 	JScrollPane sc1;
 	
@@ -29,8 +28,7 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 	JLabel[] setLabels;
 	JLabel[] folderLabels;
 	JLabel title;
-	JLabel leftNull, rightNull;
-	JLabel nullL;
+	JLabel leftLbl, rightLbl, sideLbl, sideLbl2;
 
 	String fname[];
 	String myId;
@@ -43,6 +41,8 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 		folders = mgr.getFolders(myId);
 		set = new Vector<VocaBean>();
 		set = mgr.getNoFolderSets(myId);
+		setLayout(new BorderLayout(20, 20));
+		setBackground(Color.WHITE);
 		
 		panels = new JPanel[folders.size()];
 		inner = new JPanel[folders.size()];
@@ -52,19 +52,17 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 		setcount = new int[folders.size()];
 		fname = new String[folders.size()];
 		
-		this.setLayout(new BorderLayout(20, 20));
-		this.setBackground(Color.WHITE);
 		mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBackground(Color.WHITE);
-		headPanel = new JPanel(new GridLayout(1, 2));
+		headPanel = new JPanel(new BorderLayout());
 		headPanel.setBackground(Color.WHITE);
-		headPanel.setAlignmentX(RIGHT_ALIGNMENT);
 		footPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		footPanel.setBackground(Color.WHITE);
-		titlePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		titlePanel = new JPanel(new BorderLayout());
 		titlePanel.setBackground(Color.WHITE);
 		btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		btnPanel.setBackground(Color.WHITE);
+		sideLbl2 = new JLabel("                                                                                                               ");
 		folderPanel = new JPanel(new GridLayout(folders.size(), 1));
 		folderPanel.setBackground(Color.WHITE);
 		crtBtn = new JButton("추가");
@@ -84,17 +82,12 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 		delBtn.addActionListener(this);
 		title = new JLabel("폴더 관리");
 		title.setFont(new Font("나눔스퀘어 ExtraBold", 0, 28));
+		leftLbl = new JLabel("     ");
+		rightLbl = new JLabel("     ");
+		sideLbl = new JLabel("        ");
 		sc1 = new JScrollPane(folderPanel);
 		sc1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		sc1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		nullL = new JLabel("          ");
-		leftPnl = new JPanel();
-		leftPnl.setBackground(Color.white);
-		leftNull = new JLabel("             ");
-		rightPnl = new JPanel();
-		rightPnl.setBackground(Color.white);
-		rightNull = new JLabel("               ");
 		
 		for (int i = 0; i < folders.size(); i++) {
 			VocaBean bean = folders.get(i);
@@ -125,15 +118,14 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 		btnPanel.add(crtBtn);
 		btnPanel.add(modBtn);
 		btnPanel.add(delBtn);
-		btnPanel.add(nullL);
+		btnPanel.add(sideLbl);
 		titlePanel.add(title);
 		headPanel.add(titlePanel);
-		headPanel.add(btnPanel);
-		leftPnl.add(leftNull);
-		rightPnl.add(rightNull);
+		headPanel.add(btnPanel, BorderLayout.EAST);
+		headPanel.add(sideLbl2, BorderLayout.WEST);
 		add(headPanel, BorderLayout.NORTH);
-		add(leftPnl, BorderLayout.WEST);
-		add(rightPnl, BorderLayout.EAST);
+		add(leftLbl, BorderLayout.WEST);
+		add(rightLbl, BorderLayout.EAST);
 		add(mainPanel, BorderLayout.CENTER);
 		add(footPanel, BorderLayout.SOUTH);
 	}
@@ -143,32 +135,20 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 		Object obj = e.getSource();
 		
 		if(obj == crtBtn) {
-			headPanel.removeAll();
-			leftPnl.removeAll();
-			rightPnl.removeAll();
-			footPanel.removeAll();
-			mainPanel.removeAll();
-			mainPanel.add(new NewFolder(myId));
+			removeAll();
+			add(new NewFolder(myId, 1), BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
 		else if(obj == modBtn) {
-			headPanel.removeAll();
-			leftPnl.removeAll();
-			rightPnl.removeAll();
-			footPanel.removeAll();
-			mainPanel.removeAll();
-			mainPanel.add(new ModFolder(myId));
+			removeAll();
+			add(new ModFolder(myId), BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
 		else if(obj == delBtn) {
-			headPanel.removeAll();
-			leftPnl.removeAll();
-			rightPnl.removeAll();
-			footPanel.removeAll();
-			mainPanel.removeAll();
-			mainPanel.add(new DelFolder(myId));
+			removeAll();
+			add(new DelFolder(myId), BorderLayout.CENTER);
 			revalidate();
 			repaint();
 		}
@@ -178,12 +158,8 @@ public class ManageFolder extends JPanel implements ActionListener, MouseListene
 	public void mouseClicked(MouseEvent e) {
 		for(int i = 0; i < folders.size(); i++) {
 			if(e.getSource() == panels[i]) {
-				headPanel.removeAll();
-				leftPnl.removeAll();
-				rightPnl.removeAll();
-				footPanel.removeAll();
-				mainPanel.removeAll();
-				mainPanel.add(new ViewSet(fname[i], myId));
+				removeAll();
+				add(new ViewSet(fname[i], myId), BorderLayout.CENTER);
 				revalidate();
 				repaint();
 			}

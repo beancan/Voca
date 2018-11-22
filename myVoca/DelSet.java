@@ -24,7 +24,7 @@ public class DelSet extends JPanel implements ActionListener {
 	TitledBorder tb;
 	
 	JScrollPane sc;
-	JPanel mainPanel, contentPanel;
+	JPanel mainPanel, contentPanel, bodyPnl, titlePnl;
 	JButton[] deleteBtn;
 	JPanel[] panels;
 	JPanel[] inner;
@@ -43,10 +43,18 @@ public class DelSet extends JPanel implements ActionListener {
 		set = mgr.getMySets(myId);
 		this.myId = myId;
 		
-		this.setLayout(new BorderLayout(20, 20));
+		this.setLayout(null);
+		setBackground(Color.white);
 		tb = new TitledBorder(new LineBorder(Color.BLACK));
+		bodyPnl = new JPanel(new BorderLayout());
+		bodyPnl.setBackground(Color.green);
+		bodyPnl.setBounds(55, 80, 820, 420);
+		titlePnl = new JPanel(new BorderLayout());
+		titlePnl.setBounds(0, 0, 910, 80);
+		titlePnl.setBackground(Color.white);
 		mainPanel = new JPanel(new BorderLayout());
 		contentPanel = new JPanel(new GridLayout(set.size(), 1));
+		
 		
 		deleteBtn = new JButton[set.size()];
 		panels = new JPanel[set.size()];
@@ -55,25 +63,32 @@ public class DelSet extends JPanel implements ActionListener {
 		wordLabels = new JLabel[set.size()];
 		setName = new JLabel[set.size()];
 		wordcount = new int[set.size()];
-		title = new JLabel("³» ´Ü¾î¼¼Æ® »èÁ¦");
-		title.setFont(new Font("³ª´®½ºÄù¾î Bold", 0, 28));
-		empty1 = new JLabel("             ");
-		empty2 = new JLabel("             ");
+		title = new JLabel("´Ü¾î¼¼Æ® »èÁ¦");
+		title.setFont(new Font("³ª´®°íµñ ExtraBold", 0, 28));
+		title.setHorizontalAlignment(JLabel.CENTER);
+		sname = new String[set.size()];
 		
 		for (int i = 0; i < set.size(); i++) {
 			VocaBean bean = set.get(i);
-			sname = new String[set.size()];
 			sname[i] = bean.getSetname().trim();
 			
 			wordcount[i] = mgr.getSetWordsCount(sname[i], myId);
 			panels[i] = new JPanel(new BorderLayout(10, 0));
 			panels[i].setBorder(new EtchedBorder());
+			panels[i].setBackground(Color.white);
 			inner[i] = new JPanel(new FlowLayout(0, 40, 0));
+			inner[i].setBackground(Color.white);
 			wordLabels[i] = new JLabel("´Ü¾î °³¼ö : " + wordcount[i]);
+			wordLabels[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
 			idLabels[i] = new JLabel("ID: " + myId);
+			idLabels[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
 			deleteBtn[i] = new JButton("»èÁ¦");
+			deleteBtn[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 16));
+			deleteBtn[i].setBackground(Color.black);
+			deleteBtn[i].setForeground(Color.white);
 			deleteBtn[i].addActionListener(this);
-			setName[i] = new JLabel(sname[i]);
+			setName[i] = new JLabel("     " + sname[i]);
+			setName[i].setFont(new Font("³ª´®°íµñ ExtraBold", 0, 30));
 			inner[i].add(wordLabels[i]);
 			inner[i].add(idLabels[i]);
 			inner[i].add(deleteBtn[i]);
@@ -86,10 +101,10 @@ public class DelSet extends JPanel implements ActionListener {
 		sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		sc.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		mainPanel.add(sc);
-		add(title, BorderLayout.NORTH);
-		add(mainPanel, BorderLayout.CENTER);
-		add(empty1, BorderLayout.EAST);
-		add(empty2, BorderLayout.EAST);
+		bodyPnl.add(mainPanel, BorderLayout.CENTER);
+		titlePnl.add(title);
+		add(bodyPnl);
+		add(titlePnl);
 	}
 
 	@Override
@@ -99,8 +114,20 @@ public class DelSet extends JPanel implements ActionListener {
 		for(int i = 0; i < set.size(); i++) {
 			if(obj == deleteBtn[i]) {
 				if(mgr.deleteSet(sname[i], myId) == true) {
-					revalidate();
-					repaint();
+					if(mgr.getWordFlag(myId) == true) {
+						removeAll();
+						setLayout(new BorderLayout());
+						add(new DelSet(myId));
+						revalidate();
+						repaint();
+					}
+					else {
+						removeAll();
+						setLayout(new BorderLayout());
+						add(new NoSet(myId));
+						revalidate();
+						repaint();
+					}
 				}
 			}
 		}
